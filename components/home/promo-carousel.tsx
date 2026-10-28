@@ -138,7 +138,7 @@ export function PromoCarousel() {
 
   return (
     <div
-      className="relative w-full"
+      className="relative w-full group"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -226,12 +226,12 @@ export function PromoCarousel() {
         </div>
       </div>
 
-      {/* Navigation Arrow Buttons (Hover Left & Right) */}
+      {/* Navigation Arrow Buttons (Muncul hanya saat di-hover ke banner) */}
       <button
         type="button"
         onClick={prevSlide}
         aria-label="Slide sebelumnya"
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-neutral-800 shadow-md border border-neutral-200 hover:bg-neutral-100 hover:scale-105 active:scale-95 transition-all"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-neutral-800 shadow-md border border-neutral-200 hover:bg-neutral-100 hover:scale-105 active:scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200"
       >
         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
       </button>
@@ -240,7 +240,7 @@ export function PromoCarousel() {
         type="button"
         onClick={nextSlide}
         aria-label="Slide berikutnya"
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-neutral-800 shadow-md border border-neutral-200 hover:bg-neutral-100 hover:scale-105 active:scale-95 transition-all"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-neutral-800 shadow-md border border-neutral-200 hover:bg-neutral-100 hover:scale-105 active:scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200"
       >
         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
       </button>
