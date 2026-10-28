@@ -1,6 +1,9 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://ecommerce-backend-api-nu.vercel.app/api";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const STORAGE_KEYS = {
   TOKEN: "fastshop_token",
