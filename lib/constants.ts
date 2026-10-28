@@ -8,7 +8,13 @@ export const STORAGE_KEYS = {
   CART: "fastshop_cart_local",
 } as const;
 
-export const NAV_LINKS = [
+export interface NavLinkItem {
+  label: string;
+  href: string;
+  requiresAuth?: boolean;
+}
+
+export const NAV_LINKS: readonly NavLinkItem[] = [
   { label: "Beranda", href: "/" },
   { label: "Semua Produk", href: "/products" },
   { label: "Kategori", href: "/categories" },
