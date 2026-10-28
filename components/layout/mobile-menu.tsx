@@ -2,9 +2,10 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { X, ShoppingBag, Package, LogIn, UserPlus } from "lucide-react";
+import { X, ShoppingBag, Package, LogIn, UserPlus, Sun, Moon } from "lucide-react";
 import { NAV_LINKS, FEATURED_CATEGORIES } from "@/lib/constants";
 import { useAuth } from "@/context/auth-context";
+import { useTheme } from "@/context/theme-context";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (isOpen) {
@@ -116,7 +118,31 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         {/* Footer actions inside mobile menu */}
-        <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 mt-6">
+        <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 mt-6 space-y-4">
+          {/* Theme Switcher Row */}
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+              Tema Tampilan
+            </span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 transition-colors"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-3.5 w-3.5 text-amber-500" />
+                  <span>Mode Gelap</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-3.5 w-3.5 text-neutral-600" />
+                  <span>Mode Terang</span>
+                </>
+              )}
+            </button>
+          </div>
+
           {isAuthenticated ? (
             <div className="flex flex-col gap-2">
               <Link

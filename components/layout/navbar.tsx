@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, ShoppingCart, Menu } from "lucide-react";
+import { ShoppingBag, ShoppingCart, Menu, Sun, Moon } from "lucide-react";
 import { NavSearch } from "./nav-search";
 import { NavUserMenu } from "./nav-user-menu";
 import { MobileMenu } from "./mobile-menu";
 import { useCart } from "@/context/cart-context";
+import { useTheme } from "@/context/theme-context";
 import { NAV_LINKS } from "@/lib/constants";
 import { useAuth } from "@/context/auth-context";
 
@@ -14,6 +15,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
   const { isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -70,8 +72,23 @@ export function Navbar() {
             <NavSearch />
           </div>
 
-          {/* Right: Actions (Cart & User Menu) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right: Actions (Theme, Cart & User Menu) */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Theme Toggle Button (Default Light) */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
+              aria-label={theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
+              title={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </button>
+
             {/* Cart Button */}
             <Link
               href="/cart"
