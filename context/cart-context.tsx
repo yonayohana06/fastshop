@@ -5,9 +5,16 @@ import React, {
   useContext,
   useCallback,
   useSyncExternalStore,
+  useEffect,
 } from "react";
 import { CartItem } from "@/types";
 import { STORAGE_KEYS } from "@/lib/constants";
+import {
+  getCartApi,
+  addToCartApi,
+  deleteCartItemApi,
+  clearCartApi,
+} from "@/lib/api/cart";
 
 interface CartContextType {
   items: CartItem[];
@@ -17,6 +24,7 @@ interface CartContextType {
   updateQuantity: (productId: number | string, quantity: number) => void;
   removeItem: (productId: number | string) => void;
   clearCart: () => void;
+  refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -38,6 +46,15 @@ function getServerCartSnapshot(): string {
   return "[]";
 }
 
+function saveCartLocally(newItems: CartItem[]) {
+  try {
+    localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(newItems));
+    window.dispatchEvent(new Event("fastshop-cart-change"));
+  } catch {
+    console.warn("Gagal menyimpan keranjang belanja");
+  }
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const cartJson = useSyncExternalStore(
     subscribeCart,
@@ -52,14 +69,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     items = [];
   }
 
-  const saveItems = (newItems: CartItem[]) => {
+  const refreshCart = useCallback(async () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEYS.TOKEN) : null;
+    if (!token) return;
+
     try {
-      localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(newItems));
-      window.dispatchEvent(new Event("fastshop-cart-change"));
+      const res = await getCartApi(token);
+      if (res.data?.items) {
+        saveCartLocally(res.data.items);
+      }
     } catch {
-      console.warn("Gagal menyimpan keranjang belanja");
+      // Keep local cart if server fails
     }
-  };
+  }, []);
+
+  // Sync with server if logged in
+  useEffect(() => {
+    refreshCart();
+  }, [refreshCart]);
 
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -96,15 +123,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           quantity: updatedQty,
           subtotal: priceNum * updatedQty,
         };
-        saveItems(updated);
+        saveCartLocally(updated);
       } else {
-        saveItems([
+        saveCartLocally([
           ...currentItems,
           {
             ...newItem,
             subtotal: priceNum * newItem.quantity,
           },
         ]);
+      }
+
+      // Background server sync if token available
+      const token = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEYS.TOKEN) : null;
+      if (token) {
+        addToCartApi(
+          { product_id: newItem.product_id, quantity: newItem.quantity },
+          token
+        ).catch(() => {});
       }
     },
     []
@@ -123,7 +159,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const filtered = currentItems.filter(
           (item) => String(item.product_id) !== String(productId)
         );
-        saveItems(filtered);
+        saveCartLocally(filtered);
         return;
       }
 
@@ -141,7 +177,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
         return item;
       });
-      saveItems(updated);
+      saveCartLocally(updated);
     },
     []
   );
@@ -154,14 +190,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       currentItems = [];
     }
 
+    const itemToRemove = currentItems.find(
+      (item) => String(item.product_id) === String(productId)
+    );
+
     const filtered = currentItems.filter(
       (item) => String(item.product_id) !== String(productId)
     );
-    saveItems(filtered);
+    saveCartLocally(filtered);
+
+    const token = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEYS.TOKEN) : null;
+    if (token && itemToRemove?.cart_item_id) {
+      deleteCartItemApi(itemToRemove.cart_item_id, token).catch(() => {});
+    }
   }, []);
 
   const clearCart = useCallback(() => {
-    saveItems([]);
+    saveCartLocally([]);
+
+    const token = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEYS.TOKEN) : null;
+    if (token) {
+      clearCartApi(token).catch(() => {});
+    }
   }, []);
 
   return (
@@ -174,6 +224,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity,
         removeItem,
         clearCart,
+        refreshCart,
       }}
     >
       {children}
