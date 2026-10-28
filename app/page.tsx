@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-white to-zinc-50/50 py-16 sm:py-24 dark:from-primary/15 dark:via-zinc-950 dark:to-zinc-950">
+      <section className="relative overflow-hidden bg-zinc-50/60 py-16 sm:py-24 dark:bg-zinc-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             {/* Pill Badge */}
@@ -19,7 +19,7 @@ export default function Home() {
             {/* Headline */}
             <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-zinc-950 sm:text-5xl lg:text-6xl dark:text-white">
               Belanja Cepat, Tampil{" "}
-              <span className="bg-gradient-to-r from-primary via-primary to-secondary bg-clip-text text-transparent">
+              <span className="text-primary">
                 Lebih Percaya Diri
               </span>
             </h1>
