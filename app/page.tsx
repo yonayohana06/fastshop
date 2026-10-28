@@ -7,19 +7,19 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50/70 via-white to-zinc-50/50 py-16 sm:py-24 dark:from-indigo-950/20 dark:via-zinc-950 dark:to-zinc-950">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-white to-zinc-50/50 py-16 sm:py-24 dark:from-primary/15 dark:via-zinc-950 dark:to-zinc-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200/80 bg-white/90 px-3.5 py-1 text-xs font-semibold text-indigo-700 shadow-xs dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary shadow-xs dark:border-primary/30 dark:bg-primary/10">
+              <Sparkles className="h-3.5 w-3.5 text-secondary" />
               <span>Koleksi Original & Tren Terbaru 2026</span>
             </div>
 
             {/* Headline */}
             <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-zinc-950 sm:text-5xl lg:text-6xl dark:text-white">
               Belanja Cepat, Tampil{" "}
-              <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-primary to-secondary bg-clip-text text-transparent">
                 Lebih Percaya Diri
               </span>
             </h1>
@@ -34,7 +34,7 @@ export default function Home() {
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
               <Link
                 href="/products"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-lg transition-all"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-primary/25 hover:bg-primary-hover hover:shadow-lg transition-all"
               >
                 <ShoppingBag className="h-4 w-4" />
                 Mulai Belanja Sekarang
@@ -62,7 +62,7 @@ export default function Home() {
               </div>
               <Link
                 href="/categories"
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 flex items-center gap-1"
+                className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1"
               >
                 Lihat Semua <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -73,12 +73,12 @@ export default function Home() {
                 <Link
                   key={cat.slug}
                   href={`/products?category=${cat.slug}`}
-                  className="group flex flex-col items-center justify-center rounded-2xl border border-zinc-200/80 bg-white p-5 text-center shadow-xs transition-all hover:border-indigo-500/40 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-600/50"
+                  className="group flex flex-col items-center justify-center rounded-2xl border border-zinc-200/80 bg-white p-5 text-center shadow-xs transition-all hover:border-primary/40 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-primary/50"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all dark:bg-indigo-950/50 dark:text-indigo-400">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all dark:bg-primary/20">
                     <ShoppingBag className="h-5 w-5" />
                   </div>
-                  <span className="mt-3 text-xs font-semibold text-zinc-800 group-hover:text-indigo-600 dark:text-zinc-200 dark:group-hover:text-indigo-400">
+                  <span className="mt-3 text-xs font-semibold text-zinc-800 group-hover:text-primary dark:text-zinc-200">
                     {cat.name}
                   </span>
                 </Link>

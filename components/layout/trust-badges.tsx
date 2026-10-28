@@ -36,7 +36,7 @@ export function TrustBadges() {
                 key={index}
                 className="flex items-start gap-3.5 rounded-xl border border-zinc-200/60 bg-white p-4 shadow-xs dark:border-zinc-800 dark:bg-zinc-900"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>

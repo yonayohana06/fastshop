@@ -14,11 +14,11 @@ export function Footer() {
               href="/"
               className="flex items-center gap-2.5 font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
                 <ShoppingBag className="h-4 w-4" />
               </div>
               <span>
-                Fast<span className="text-indigo-600 dark:text-indigo-400">Shop</span>
+                Fast<span className="text-secondary">Shop</span>
               </span>
             </Link>
             <p className="mt-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
@@ -27,15 +27,15 @@ export function Footer() {
             </p>
             <div className="mt-4 flex flex-col gap-2 text-xs text-zinc-500">
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 shrink-0 text-indigo-600" />
+                <MapPin className="h-4 w-4 shrink-0 text-primary" />
                 <span>Yogyakarta, Indonesia</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 shrink-0 text-indigo-600" />
+                <Mail className="h-4 w-4 shrink-0 text-primary" />
                 <span>support@fastshop.com</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-indigo-600" />
+                <Phone className="h-4 w-4 shrink-0 text-primary" />
                 <span>+62 812-3456-7890</span>
               </div>
             </div>
@@ -51,7 +51,7 @@ export function Footer() {
                 <li key={cat.slug}>
                   <Link
                     href={`/products?category=${cat.slug}`}
-                    className="hover:text-indigo-600 dark:hover:text-white transition-colors"
+                    className="hover:text-primary dark:hover:text-white transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -69,7 +69,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/orders"
-                  className="hover:text-indigo-600 dark:hover:text-white transition-colors"
+                  className="hover:text-primary dark:hover:text-white transition-colors"
                 >
                   Cek Status Pesanan
                 </Link>
@@ -77,7 +77,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/cart"
-                  className="hover:text-indigo-600 dark:hover:text-white transition-colors"
+                  className="hover:text-primary dark:hover:text-white transition-colors"
                 >
                   Keranjang Belanja
                 </Link>
@@ -121,7 +121,7 @@ export function Footer() {
               <span className="rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
                 BRI
               </span>
-              <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-[11px] font-bold text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-400">
+              <span className="rounded-md border border-secondary/30 bg-secondary/10 px-2.5 py-1 text-[11px] font-bold text-secondary dark:border-secondary/50 dark:bg-secondary/20">
                 QRIS
               </span>
             </div>

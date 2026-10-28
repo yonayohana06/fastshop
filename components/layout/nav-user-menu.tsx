@@ -25,13 +25,13 @@ export function NavUserMenu() {
       <div className="flex items-center gap-2">
         <Link
           href="/login"
-          className="text-sm font-medium text-zinc-700 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          className="text-sm font-medium text-zinc-700 hover:text-primary dark:text-zinc-300 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
         >
           Masuk
         </Link>
         <Link
           href="/register"
-          className="text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 rounded-lg shadow-sm transition-all hover:shadow"
+          className="text-sm font-medium text-white bg-primary hover:bg-primary-hover px-3.5 py-1.5 rounded-lg shadow-sm transition-all hover:shadow"
         >
           Daftar
         </Link>
@@ -55,7 +55,7 @@ export function NavUserMenu() {
         className="flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none"
         aria-expanded={isOpen}
       >
-        <div className="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-medium text-xs shadow-sm">
+        <div className="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center font-medium text-xs shadow-sm">
           {initials}
         </div>
         <span className="hidden lg:inline-block text-xs font-medium text-zinc-800 dark:text-zinc-200 max-w-[120px] truncate">

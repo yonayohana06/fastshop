@@ -46,10 +46,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               onClick={onClose}
               className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-white"
             >
-              <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white">
                 <ShoppingBag className="h-4 w-4" />
               </div>
-              <span>Fast<span className="text-indigo-600">Shop</span></span>
+              <span>Fast<span className="text-secondary">Shop</span></span>
             </Link>
             <button
               onClick={onClose}
@@ -63,7 +63,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {/* User info if authenticated */}
           {isAuthenticated && user && (
             <div className="mt-4 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-xl flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-sm">
+              <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-sm">
                 {user.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0">
@@ -150,7 +150,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <Link
                 href="/register"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 shadow-sm"
+                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-primary text-sm font-medium text-white hover:bg-primary-hover shadow-sm"
               >
                 <UserPlus className="h-4 w-4" />
                 Daftar Akun

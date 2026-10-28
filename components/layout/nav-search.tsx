@@ -30,7 +30,7 @@ export function NavSearch() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Cari pakaian, sepatu, celana..."
-          className="w-full rounded-full border border-zinc-200 bg-zinc-50/80 py-2 pl-10 pr-9 text-sm text-zinc-900 placeholder-zinc-400 transition-all focus:border-indigo-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-950/50"
+          className="w-full rounded-full border border-zinc-200 bg-zinc-50/80 py-2 pl-10 pr-9 text-sm text-zinc-900 placeholder-zinc-400 transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-primary dark:focus:ring-primary/20"
         />
         {query && (
           <button

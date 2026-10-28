@@ -18,7 +18,7 @@ export function Navbar() {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-indigo-600 px-4 py-1.5 text-center text-xs font-medium text-white tracking-wide">
+      <div className="bg-primary px-4 py-1.5 text-center text-xs font-medium text-white tracking-wide">
         ⚡ Belanja Cepat & Aman di FastShop | Gratis Ongkir untuk Pesanan Pertama!
       </div>
 
@@ -40,11 +40,11 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2.5 font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white group"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-700 to-indigo-500 text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
                 <ShoppingBag className="h-5 w-5" />
               </div>
               <span>
-                Fast<span className="text-indigo-600 dark:text-indigo-400">Shop</span>
+                Fast<span className="text-secondary">Shop</span>
               </span>
             </Link>
           </div>
@@ -57,7 +57,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-zinc-600 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+                  className="text-zinc-600 hover:text-primary dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -75,12 +75,12 @@ export function Navbar() {
             {/* Cart Button */}
             <Link
               href="/cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-indigo-600 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
               aria-label={`Keranjang belanja (${totalItems} item)`}
             >
               <ShoppingCart className="h-5 w-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-indigo-600 px-1 text-[11px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-secondary px-1 text-[11px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               )}
