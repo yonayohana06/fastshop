@@ -73,13 +73,13 @@ Dokumen ini berisi rencana kerja terstruktur untuk mengoptimalkan *Search Engine
 ### 🗺️ Fase 3: Peta Situs Dinamis & Robot Crawler (`sitemap.ts` & `robots.ts`)
 > Membantu mesin pencari menemukan dan mengindeks seluruh URL produk secara otomatis.
 
-- [ ] **3.1. Buat `app/sitemap.ts`**
+- [x] **3.1. Buat `app/sitemap.ts`**
   - Buat sitemap dinamis menggunakan fitur bawaan Next.js.
   - Query daftar seluruh produk dari Backend API (`GET /products?limit=1000`).
   - Generate entri XML untuk:
     - Rute statis: `/`, `/products`, `/categories` (frekuensi: `daily`, priority: `1.0` - `0.8`).
     - Seluruh rute dinamis produk: `/products/[id]` (frekuensi: `weekly`, priority: `0.7`, `lastModified` sesuai `updated_at`).
-- [ ] **3.2. Buat `app/robots.ts`**
+- [x] **3.2. Buat `app/robots.ts`**
   - Buat aturan bot pencari menggunakan fitur Next.js `robots.ts`:
     - Izinkan bot umum (`User-agent: *`, `Allow: /`).
     - Larang perayapan pada halaman privat: `Disallow: /cart`, `Disallow: /checkout`, `Disallow: /orders`, `Disallow: /profile`.

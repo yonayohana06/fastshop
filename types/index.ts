@@ -29,8 +29,9 @@ export interface Product {
   image_url: string;
   category_id?: number | string;
   category_name?: string;
+  created_at?: string;
+  updated_at?: string;
 }
-
 export interface Category {
   id: number | string;
   name: string;
