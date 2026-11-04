@@ -15,7 +15,7 @@ const BADGES = [
   {
     icon: CreditCard,
     title: "Pembayaran Aman",
-    description: "Dukungan transfer bank & QRIS dengan konfirmasi instan",
+    description: "Transfer bank resmi dengan verifikasi bukti pembayaran yang cepat & aman",
   },
   {
     icon: Headphones,
@@ -40,9 +40,9 @@ export function TrustBadges() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                     {badge.title}
-                  </h4>
+                  </h3>
                   <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
                     {badge.description}
                   </p>

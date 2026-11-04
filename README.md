@@ -17,11 +17,12 @@ Desain visual mengusung filosofi **Solid Colors (Bebas Gradasi Warna)** dengan i
 
 ## ✨ Fitur Utama
 
-### 1. Beranda Dinamis & Katalog Produk (`/`, `/products`)
-- **Hero Showcase:** Banner sambutan dengan penawaran gratis ongkir dan jaminan keaslian produk.
+### 1. Beranda Dinamis, Eksplorasi Kategori, & Katalog Produk (`/`, `/categories`, `/products`)
+- **Promo Carousel Beranda:** Banner interaktif dengan *touch swipe gesture*, *autoplay*, dan badge penawaran berbatas waktu (*solid colors*).
+- **Direktori Kategori Mandiri (`/categories`):** Halaman eksplorasi seluruh kategori busana dengan *breadcrumbs*, kartu kategori responsif, dan ikon *fallback* otomatis.
 - **Pencarian Cerdas:** Kolom pencarian di navbar dan mobile menu dengan *debounced instant search*.
-- **Penyaring Kategori & Pengurutan:** Filter kategori berbasis *pill* dan opsi pengurutan (*Termurah, Termahal, Terbaru, Terlama*).
-- **Paginasi & Status Stok:** Penanganan stok produk dengan tombol cepat *"Beli"* langsung dari kartu produk.
+- **Penyaring Kategori & Pengurutan:** Filter kategori berbasis *pill* (mendukung ID & slug) dan opsi pengurutan (*Termurah, Termahal, Terbaru, Terlama*).
+- **Responsif Mobile & Status Stok:** Tata letak grid 2-kolom pada perangkat seluler, penanganan stok produk, dan tombol cepat *"Beli"* langsung dari kartu produk.
 
 ### 2. Halaman Rincian Produk (`/products/[id]`)
 - **Pratinjau Gambar:** Kontainer gambar produk responsif dengan optimasi Next.js Image.
@@ -77,6 +78,7 @@ fastshop/
 │   │   ├── login/page.tsx            # Halaman Masuk (+ Pintasan Akun Demo)
 │   │   └── register/page.tsx         # Halaman Registrasi
 │   ├── cart/page.tsx                 # Halaman Keranjang Belanja
+│   ├── categories/page.tsx           # Halaman Direktori Semua Kategori Produk
 │   ├── checkout/page.tsx             # Halaman Formulir Checkout
 │   ├── orders/
 │   │   ├── page.tsx                  # Halaman Riwayat Pesanan (Status Tabs)
@@ -90,6 +92,7 @@ fastshop/
 │   └── page.tsx                      # Beranda Utama
 ├── components/
 │   ├── cart/                         # Komponen baris keranjang & ringkasan tagihan
+│   ├── home/                         # PromoCarousel banner beranda
 │   ├── layout/                       # Navbar, Footer, Mobile Menu, User Menu, Search
 │   ├── orders/                       # OrderStatusBadge, PaymentUploadModal
 │   ├── products/                     # ProductCard, ProductSkeleton, PurchaseBox, Toast
@@ -100,11 +103,13 @@ fastshop/
 │   ├── cart-context.tsx              # State keranjang belanja & sinkronisasi server
 │   └── theme-context.tsx             # Pengatur tema (Default Light Mode)
 ├── lib/
-│   ├── api/                          # HTTP client & service endpoints (auth, products, cart, orders)
+│   ├── api/                          # HTTP client & service endpoints (auth, products, categories, cart, orders)
 │   ├── constants.ts                  # Konstanta aplikasi & storage keys
 │   └── utils.ts                      # FormatRupiah & string helpers
 ├── types/
 │   └── index.ts                      # Data model interfaces & contracts
+├── DESIGN.md                         # Spesifikasi token desain & panduan visual
+├── PRODUCT.md                        # Dokumentasi produk, positioning, & kapabilitas
 ├── docs/                             # Rencana pengembangan & dokumentasi API
 └── public/                           # Aset statis & logo
 ```
@@ -144,17 +149,23 @@ Buka peramban Anda di [http://localhost:3000](http://localhost:3000).
 
 ## 🧪 Pemeriksaan Kualitas & Build
 
-### Linting Kode
+### 1. Pengecekan Zero Gradients (Aturan Wajib)
+```bash
+grep -rn "gradient" app components lib
+# Hasil HARUS 0 matches (100% solid colors)
+```
+
+### 2. Linting Kode
 ```bash
 npm run lint
 ```
 
-### Type Checking
+### 3. Type Checking
 ```bash
 npx tsc --noEmit
 ```
 
-### Build Produksi
+### 4. Build Produksi
 ```bash
 npm run build
 npm start

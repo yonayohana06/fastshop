@@ -22,16 +22,23 @@ export function NavUserMenu() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <Link
           href="/login"
-          className="text-sm font-medium text-zinc-700 hover:text-primary dark:text-zinc-300 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          aria-label="Masuk ke akun"
+          className="sm:hidden p-2 text-zinc-700 hover:text-primary dark:text-zinc-300 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <UserIcon className="h-5 w-5" />
+        </Link>
+        <Link
+          href="/login"
+          className="hidden sm:inline-flex text-sm font-medium text-zinc-700 hover:text-primary dark:text-zinc-300 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
         >
           Masuk
         </Link>
         <Link
           href="/register"
-          className="text-sm font-medium text-white bg-primary hover:bg-primary-hover px-3.5 py-1.5 rounded-lg shadow-sm transition-all hover:shadow"
+          className="hidden sm:inline-flex text-sm font-medium text-white bg-primary hover:bg-primary-hover px-3.5 py-1.5 rounded-lg shadow-xs transition-all hover:shadow-sm"
         >
           Daftar
         </Link>

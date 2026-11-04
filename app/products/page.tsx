@@ -16,7 +16,8 @@ function ProductsContent() {
   const searchParams = useSearchParams();
 
   const currentSearch = searchParams.get("search") || "";
-  const currentCategory = searchParams.get("category_id") || "";
+  const categoryIdParam = searchParams.get("category_id") || "";
+  const categorySlugParam = searchParams.get("category") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const currentSort = searchParams.get("sort") || "latest";
 
@@ -28,6 +29,15 @@ function ProductsContent() {
 
   const [searchInput, setSearchInput] = useState(currentSearch);
   const [isPending, startTransition] = useTransition();
+  // Resolve effective category ID from either category_id or category slug query param
+  const currentCategory = React.useMemo(() => {
+    if (categoryIdParam) return categoryIdParam;
+    if (!categorySlugParam || categories.length === 0) return "";
+    const matched = categories.find(
+      (c) => c.slug.toLowerCase() === categorySlugParam.toLowerCase()
+    );
+    return matched ? String(matched.id) : "";
+  }, [categoryIdParam, categorySlugParam, categories]);
 
   // Load Categories once on mount
   useEffect(() => {
@@ -114,6 +124,7 @@ function ProductsContent() {
   const handleCategorySelect = (catId: string | number | null) => {
     updateFilters({
       category_id: catId,
+      category: null,
       page: 1,
     });
   };
@@ -247,7 +258,7 @@ function ProductsContent() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 sm:gap-5">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
