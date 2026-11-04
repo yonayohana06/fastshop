@@ -5,6 +5,7 @@ import { Star, ArrowLeft, AlertCircle, Package } from "lucide-react";
 import { Product } from "@/types";
 import { getProductById, getProducts } from "@/lib/api/products";
 import { SITE_URL } from "@/lib/constants";
+import { parseProductId, slugify } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ProductPurchaseBox } from "@/components/products/product-purchase-box";
 import { ProductCard } from "@/components/products/product-card";
@@ -16,7 +17,8 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id: rawId } = await params;
+  const id = parseProductId(rawId);
 
   try {
     const res = await getProductById(id);
@@ -33,7 +35,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const cleanDesc = product.description
       ? product.description.replace(/\s+/g, " ").trim().slice(0, 160)
       : `Beli ${product.name} original dengan harga terbaik dan pengiriman cepat hanya di FastShop.`;
-    const productUrl = `${SITE_URL}/products/${product.id}`;
+    const productSlug = product.name ? `-${slugify(product.name)}` : "";
+    const productUrl = `${SITE_URL}/products/${product.id}${productSlug}`;
     const imageUrl = product.image_url || `${SITE_URL}/icons/icon-512x512.png`;
 
     return {
@@ -73,7 +76,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = await params;
+  const { id: rawId } = await params;
+  const id = parseProductId(rawId);
 
   let product: Product | null = null;
   let relatedProducts: Product[] = [];
@@ -146,7 +150,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
     { label: product.name },
   ];
 
-  const productUrl = `${SITE_URL}/products/${product.id}`;
+  const productSlug = product.name ? `-${slugify(product.name)}` : "";
+  const productUrl = `${SITE_URL}/products/${product.id}${productSlug}`;
   const cleanDescription = product.description
     ? product.description.replace(/\s+/g, " ").trim().slice(0, 200)
     : `Beli ${product.name} di FastShop.`;

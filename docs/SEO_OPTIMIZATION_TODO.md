@@ -107,7 +107,7 @@ Dokumen ini berisi rencana kerja terstruktur untuk mengoptimalkan *Search Engine
   - Pastikan hanya ada tepat satu elemen `<h1>` per halaman (yaitu nama produk).
   - Bagian deskripsi dan spesifikasi menggunakan `<h2>`.
   - Bagian produk terkait menggunakan `<h2>` atau `<h3>`.
-- [ ] **5.2. Slug URL Ramah Pengguna (Opsional / Rekomendasi)**
+- [x] **5.2. Slug URL Ramah Pengguna (Opsional / Rekomendasi)**
   - Mendukung format URL berbasis slug (contoh: `/products/[id]-[slug]`, misal `/products/5-t-shirt-polos-hitam`) agar kata kunci produk terbaca di URL oleh Google.
 
 ---
