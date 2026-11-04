@@ -4,6 +4,10 @@ import { ApiResponse } from "@/types";
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined | null>;
   token?: string | null;
+  next?: {
+    revalidate?: number | false;
+    tags?: string[];
+  };
 }
 
 export async function apiClient<T>(
