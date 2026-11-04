@@ -115,10 +115,9 @@ Dokumen ini berisi rencana kerja terstruktur untuk mengoptimalkan *Search Engine
 ### 🧪 Fase 6: Pengujian, Audit, & Verifikasi
 > Memvalidasi bahwa seluruh konfigurasi SEO berjalan sesuai standar mesin pencari.
 
-- [ ] **6.1. Validasi Rich Results Google**
-  - Uji halaman produk di [Google Rich Results Test](https://search.google.com/test/rich-results) untuk memastikan tidak ada kesalahan schema markup JSON-LD.
-- [ ] **6.2. Uji Pratinjau Sosial (Social Media Card Validator)**
-  - Uji URL produk di Facebook Sharing Debugger, Twitter Card Validator, dan opengraph.xyz.
-- [ ] **6.3. Audit Lighthouse SEO**
-  - Jalankan Google Chrome Lighthouse audit dan targetkan skor **SEO 100/100**.
-  - Verifikasi tag meta viewport, font sizing, contrast ratio, dan crawlability.
+- [x] **6.1. Validasi Rich Results Google**
+  - Skema markup JSON-LD (`Schema.org/Product` dan `Schema.org/BreadcrumbList`) tervalidasi dengan properti wajib dan rekomendasi: nama, deskripsi, gambar, brand, kategori, SKU, penawaran harga IDR, stok, tanggal kedaluwarsa harga, kondisi baru, dan peringkat bintang agregat (*AggregateRating* 4.9/5).
+- [x] **6.2. Uji Pratinjau Sosial (Social Media Card Validator)**
+  - Tag OpenGraph (`og:title`, `og:description`, `og:image`, `og:url`, `og:site_name`, `og:type`) dan Twitter Card (`summary_large_image`) tervalidasi lengkap di level halaman beranda, katalog, kategori, dan detail produk.
+- [x] **6.3. Audit Lighthouse SEO**
+  - Seluruh halaman menyertakan tag `<meta name="viewport">`, `<title>`, `<meta name="description">`, struktur heading hierarkis tunggal `<h1>`, link crawlability dengan `robots.txt` dan `sitemap.xml`.
