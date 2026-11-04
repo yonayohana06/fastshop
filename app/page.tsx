@@ -11,6 +11,8 @@ import {
   RotateCcw,
   Shirt,
   Footprints,
+  CreditCard,
+  PackageCheck,
 } from "lucide-react";
 import { Product, Category } from "@/types";
 import { getProducts } from "@/lib/api/products";
@@ -46,7 +48,7 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [reloadToken, setReloadToken] = useState(0);
   useEffect(() => {
     let isMounted = true;
 
@@ -70,13 +72,19 @@ export default function Home() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [reloadToken]);
 
-  // Limit to maximum 6 categories as requested
-  const displayCategories = categories.slice(0, 6);
+  // Prioritize categories with available products, limit to 6
+  const activeCategories = categories.filter(
+    (cat) => typeof cat.product_count !== "number" || cat.product_count > 0
+  );
+  const displayCategories = (activeCategories.length > 0 ? activeCategories : categories).slice(0, 6);
 
   return (
     <div className="flex flex-col">
+      <h1 className="sr-only">
+        FastShop - Toko Busana, Kemeja, Jeans, dan Sepatu Original Terpercaya
+      </h1>
       {/* 1. Hero Promo Carousel (Tokopedia Style - Solid Colors Only) */}
       <section className="pt-6 pb-8 bg-zinc-50/50 dark:bg-zinc-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -97,7 +105,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/products"
+              href="/categories"
               className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 group"
             >
               <span>Lihat Semua</span>
@@ -106,38 +114,53 @@ export default function Home() {
           </div>
 
           {/* List ke samping (Horizontal scrollable di mobile, 6 kolom rapi di desktop) */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none sm:grid sm:grid-cols-6 sm:overflow-visible">
-            {displayCategories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/products?category_id=${cat.id}`}
-                className="group flex flex-col items-center justify-center shrink-0 w-32 sm:w-auto rounded-2xl border border-zinc-200/90 bg-zinc-50/80 p-3.5 text-center transition-all hover:border-primary/60 hover:bg-white hover:shadow-xs dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary group-hover:scale-110 transition-transform">
-                  {cat.icon_url ? (
-                    <Image
-                      src={cat.icon_url}
-                      alt={cat.name}
-                      width={28}
-                      height={28}
-                      className="h-7 w-7 object-contain"
-                      unoptimized
-                    />
-                  ) : (
-                    getFallbackCategoryIcon(cat.slug || cat.name)
-                  )}
+          {isLoading ? (
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none sm:grid sm:grid-cols-6 sm:overflow-visible">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center justify-center shrink-0 w-28 sm:w-auto rounded-2xl border border-zinc-200/60 bg-zinc-50/50 p-3 sm:p-3.5 animate-pulse dark:border-zinc-800 dark:bg-zinc-900"
+                >
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+                  <div className="mt-2.5 h-3.5 w-16 rounded bg-zinc-200 dark:bg-zinc-800" />
+                  <div className="mt-1.5 h-2.5 w-10 rounded bg-zinc-100 dark:bg-zinc-800/60" />
                 </div>
-                <span className="mt-2 text-xs font-bold text-zinc-900 group-hover:text-primary dark:text-zinc-100 truncate w-full">
-                  {cat.name}
-                </span>
-                {typeof cat.product_count === "number" && (
-                  <span className="text-[10px] text-zinc-400 mt-0.5">
-                    {cat.product_count} produk
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory sm:grid sm:grid-cols-6 sm:overflow-visible">
+              {displayCategories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/products?category_id=${cat.id}`}
+                  className="group flex flex-col items-center justify-center shrink-0 w-28 sm:w-auto snap-start rounded-2xl border border-zinc-200/90 bg-zinc-50/80 p-3 sm:p-3.5 text-center transition-all hover:border-primary/60 hover:bg-white hover:shadow-xs dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary group-hover:scale-110 transition-transform">
+                    {cat.icon_url ? (
+                      <Image
+                        src={cat.icon_url}
+                        alt={cat.name}
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 object-contain"
+                        unoptimized
+                      />
+                    ) : (
+                      getFallbackCategoryIcon(cat.slug || cat.name)
+                    )}
+                  </div>
+                  <span className="mt-2 text-xs font-bold text-zinc-900 group-hover:text-primary dark:text-zinc-100 truncate w-full">
+                    {cat.name}
                   </span>
-                )}
-              </Link>
-            ))}
-          </div>
+                  {typeof cat.product_count === "number" && (
+                    <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      {cat.product_count} produk
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -173,15 +196,20 @@ export default function Home() {
             <div className="rounded-2xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
               <p className="text-xs text-zinc-500">{error}</p>
               <button
-                onClick={() => window.location.reload()}
-                className="mt-3 inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white"
+                type="button"
+                onClick={() => {
+                  setIsLoading(true);
+                  setError(null);
+                  setReloadToken((t) => t + 1);
+                }}
+                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-semibold text-white hover:bg-primary-hover transition-colors"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                Muat Ulang
+                <span>Coba Muat Ulang</span>
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -191,33 +219,70 @@ export default function Home() {
       </section>
 
       {/* 4. Solid Promotional Banner (No Gradients) */}
-      <section className="bg-primary text-white py-14">
+      {/* 4. Educational 3-Step Guide (Zero Gradients) */}
+      <section className="py-14 bg-white dark:bg-zinc-900 border-t border-zinc-200/90 dark:border-zinc-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="max-w-xl text-center md:text-left">
-              <span className="inline-block rounded-md bg-white/15 px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">
-                Penawaran Spesial
-              </span>
-              <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl">
-                Dapatkan Promo Diskon &amp; Bebas Ongkir Hari Ini
-              </h2>
-              <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
-                Belanja kebutuhan fashion Anda tanpa khawatir ongkos kirim.
-                Garansi produk 100% original atau uang kembali penuh.
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary dark:bg-primary/20 dark:text-emerald-400">
+              <span>Alur Belanja Transparan</span>
+            </div>
+            <h2 className="mt-2 text-2xl font-extrabold text-zinc-950 dark:text-white sm:text-3xl">
+              3 Langkah Belanja Cepat di FastShop
+            </h2>
+            <p className="mt-1.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+              Proses mudah dan aman dari memilih busana hingga paket tiba di alamat Anda
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="relative rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-6 dark:border-zinc-800 dark:bg-zinc-950/60 transition-all hover:border-primary/50">
+              <div className="flex items-center justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-xs">
+                  <ShoppingBag className="h-6 w-6" />
+                </div>
+                <span className="text-2xl font-black text-zinc-300 dark:text-zinc-700">01</span>
+              </div>
+              <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                Pilih Produk &amp; Ukuran
+              </h3>
+              <p className="mt-1.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                Temukan busana, kemeja, celana, atau sepatu favorit Anda. Cek detail bahan dan ukuran, lalu masukkan ke keranjang belanja.
               </p>
             </div>
-            <div className="shrink-0">
-              <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3.5 text-sm font-bold text-white shadow-xs hover:bg-secondary-hover transition-colors"
-              >
-                <ShoppingBag className="h-4 w-4" />
-                <span>Mulai Belanja</span>
-              </Link>
+
+            <div className="relative rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-6 dark:border-zinc-800 dark:bg-zinc-950/60 transition-all hover:border-secondary/50">
+              <div className="flex items-center justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-white shadow-xs">
+                  <CreditCard className="h-6 w-6" />
+                </div>
+                <span className="text-2xl font-black text-zinc-300 dark:text-zinc-700">02</span>
+              </div>
+              <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                Transfer Bank Resmi
+              </h3>
+              <p className="mt-1.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                Lakukan transfer ke rekening resmi FastShop sesuai total nominal tanpa biaya transaksi tambahan yang tersembunyi.
+              </p>
+            </div>
+
+            <div className="relative rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-6 dark:border-zinc-800 dark:bg-zinc-950/60 transition-all hover:border-primary/50">
+              <div className="flex items-center justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-xs">
+                  <PackageCheck className="h-6 w-6" />
+                </div>
+                <span className="text-2xl font-black text-zinc-300 dark:text-zinc-700">03</span>
+              </div>
+              <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                Upload Bukti &amp; Kirim
+              </h3>
+              <p className="mt-1.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                Unggah foto struk transfer di halaman pesanan. Tim kami segera memverifikasi dan mengirim paket Anda dengan resi aktif.
+              </p>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* 5. Trust Badges Guarantee Banner */}
       <TrustBadges />

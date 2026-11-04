@@ -41,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group flex flex-col justify-between rounded-2xl border border-zinc-200/80 bg-white p-3.5 transition-all hover:border-primary/50 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="group flex flex-col justify-between rounded-2xl border border-zinc-200/80 bg-white p-2.5 sm:p-3.5 transition-all hover:border-primary/50 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
       <div>
         {/* Image Container */}
         <Link
@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={product.image_url}
               alt={product.name}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               onError={() => setImageError(true)}
             />
@@ -74,36 +74,38 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         {/* Category & Stock Information */}
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-2.5 sm:mt-3 flex items-center justify-between gap-1 text-[10px] sm:text-[11px]">
           {product.category_name && (
-            <span className="inline-block rounded-md bg-primary-light px-2 py-0.5 text-[11px] font-semibold text-primary dark:bg-primary-light dark:text-primary">
+            <span className="inline-block rounded-md bg-primary-light px-1.5 sm:px-2 py-0.5 font-semibold text-primary dark:bg-primary-light dark:text-primary truncate max-w-[60%] sm:max-w-none">
               {product.category_name}
             </span>
           )}
           <span
-            className={`text-[11px] font-medium ${
+            className={`font-medium shrink-0 ${
               isOutOfStock
                 ? "text-red-500"
                 : "text-zinc-500 dark:text-zinc-400"
             }`}
           >
-            {isOutOfStock ? "Habis" : `Stok: ${product.stock}`}
+            {isOutOfStock ? "Habis" : product.stock <= 5 ? `Sisa ${product.stock}` : "Tersedia"}
           </span>
         </div>
 
         {/* Product Title */}
         <Link href={`/products/${product.id}`} className="mt-2 block">
-          <h3 className="line-clamp-2 text-sm font-semibold text-zinc-900 transition-colors group-hover:text-primary dark:text-zinc-100">
+          <h3 className="line-clamp-2 text-xs sm:text-sm font-semibold text-zinc-900 transition-colors group-hover:text-primary dark:text-zinc-100 min-h-[2rem] sm:min-h-[2.5rem]">
             {product.name}
           </h3>
         </Link>
       </div>
 
       {/* Footer: Price & Add To Cart Button */}
-      <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800/80">
-        <div>
-          <span className="text-[11px] text-zinc-400 block">Harga</span>
-          <span className="text-base font-extrabold text-zinc-950 dark:text-white">
+      <div className="mt-3 sm:mt-4 flex items-center justify-between gap-1.5 border-t border-zinc-100 pt-2.5 sm:pt-3 dark:border-zinc-800/80">
+        <div className="min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-medium text-zinc-500 dark:text-zinc-400 block leading-tight">
+            Harga
+          </span>
+          <span className="text-xs sm:text-base font-extrabold text-zinc-950 dark:text-white whitespace-nowrap block">
             {formatRupiah(product.price)}
           </span>
         </div>
@@ -119,7 +121,7 @@ export function ProductCard({ product }: ProductCardProps) {
               ? "Stok produk habis"
               : `Tambah ${product.name} ke keranjang`
           }
-          className={`relative flex h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-xs font-semibold transition-all ${
+          className={`relative flex h-8 w-8 sm:h-9 sm:w-auto shrink-0 items-center justify-center gap-1 sm:gap-1.5 rounded-xl px-0 sm:px-3 text-xs font-semibold transition-all ${
             isAdded
               ? "bg-secondary text-white shadow-xs"
               : isOutOfStock
@@ -130,12 +132,12 @@ export function ProductCard({ product }: ProductCardProps) {
           {isAdded ? (
             <>
               <Check className="h-4 w-4" />
-              <span>Masuk!</span>
+              <span className="hidden sm:inline">Masuk!</span>
             </>
           ) : (
             <>
               <Plus className="h-4 w-4" />
-              <span>Beli</span>
+              <span className="hidden sm:inline">Beli</span>
             </>
           )}
         </button>

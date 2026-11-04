@@ -6,11 +6,11 @@ interface ProductSkeletonProps {
 
 export function ProductSkeleton({ count = 8 }: ProductSkeletonProps) {
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 sm:gap-5">
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
-          className="flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-3.5 dark:border-zinc-800 dark:bg-zinc-900 animate-pulse"
+          className="flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-2.5 sm:p-3.5 dark:border-zinc-800 dark:bg-zinc-900 animate-pulse"
         >
           {/* Image Skeleton */}
           <div className="aspect-square w-full rounded-xl bg-zinc-200 dark:bg-zinc-800" />

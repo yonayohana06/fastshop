@@ -40,3 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# AI Agent & local tool configs
+/.codex/
+/.impeccable/config.local.json
+/.impeccable/live/
+/.impeccable/sessions/
+/.agents/
+/.impeccable/
