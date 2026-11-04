@@ -6,6 +6,7 @@ export interface GetProductsParams {
   category_id?: number | string;
   page?: number;
   limit?: number;
+  revalidate?: number | false;
 }
 
 export async function getProducts(
@@ -19,15 +20,20 @@ export async function getProducts(
       page: params.page || 1,
       limit: params.limit || 12,
     },
-    cache: "no-store",
+    ...(params.revalidate !== undefined
+      ? { next: { revalidate: params.revalidate } }
+      : { cache: "no-store" }),
   });
 }
 
 export async function getProductById(
-  id: string | number
+  id: string | number,
+  options?: { revalidate?: number | false }
 ): Promise<ApiResponse<Product>> {
   return apiClient<Product>(`products/${id}`, {
     method: "GET",
-    cache: "no-store",
+    next: {
+      revalidate: options?.revalidate !== undefined ? options.revalidate : 3600,
+    },
   });
 }

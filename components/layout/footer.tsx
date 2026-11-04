@@ -134,7 +134,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 border-t border-zinc-200 pt-8 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-zinc-500">
-            &copy; {new Date().getFullYear()} FastShop E-Commerce. All rights reserved.
+            &copy; {new Date().getFullYear()} FastShop. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-zinc-500">
             <span className="hover:text-zinc-900 dark:hover:text-zinc-200 cursor-pointer">
