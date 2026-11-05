@@ -86,8 +86,8 @@ export default function Home() {
         FastShop - Toko Busana, Kemeja, Jeans, dan Sepatu Original Terpercaya
       </h1>
       {/* 1. Hero Promo Carousel (Tokopedia Style - Solid Colors Only) */}
-      <section className="pt-6 pb-8 bg-zinc-50/50 dark:bg-zinc-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="pt-3 sm:pt-6 pb-6 sm:pb-8 bg-zinc-50/50 dark:bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-0 sm:px-6 lg:px-8">
           <PromoCarousel />
         </div>
       </section>

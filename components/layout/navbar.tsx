@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, ShoppingCart, Menu, Sun, Moon } from "lucide-react";
 import { NavSearch } from "./nav-search";
 import { NavUserMenu } from "./nav-user-menu";
@@ -12,11 +13,13 @@ import { NAV_LINKS } from "@/lib/constants";
 import { useAuth } from "@/context/auth-context";
 
 export function Navbar() {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
   const { isAuthenticated } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  const isCartOrCheckout = pathname === "/cart" || pathname === "/checkout";
   return (
     <>
       {/* Top Banner */}
@@ -74,11 +77,11 @@ export function Navbar() {
 
           {/* Right: Actions (Theme, Cart & User Menu) */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Theme Toggle Button (Default Light) */}
+            {/* Theme Toggle Button (Desktop Only) */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
+              className="hidden sm:flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
               aria-label={theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
               title={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
             >
@@ -89,10 +92,10 @@ export function Navbar() {
               )}
             </button>
 
-            {/* Cart Button */}
+            {/* Cart Button (Desktop Navbar) */}
             <Link
               href="/cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
+              className="relative hidden sm:flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100 hover:text-primary dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
               aria-label={`Keranjang belanja (${totalItems} item)`}
             >
               <ShoppingCart className="h-5 w-5" />
@@ -121,6 +124,21 @@ export function Navbar() {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
+      {/* Floating Cart Button (Mobile Mode Only) */}
+      {!isCartOrCheckout && (
+        <Link
+          href="/cart"
+          className="sm:hidden fixed bottom-6 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-primary/30 border border-white/20 active:scale-90 transition-transform duration-150"
+          aria-label={`Keranjang belanja (${totalItems} item)`}
+        >
+          <ShoppingCart className="h-6 w-6 text-white" />
+          {totalItems > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-6 min-w-[24px] items-center justify-center rounded-full bg-secondary px-1.5 text-xs font-black text-white shadow-md ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
+              {totalItems > 99 ? "99+" : totalItems}
+            </span>
+          )}
+        </Link>
+      )}
     </>
   );
 }
