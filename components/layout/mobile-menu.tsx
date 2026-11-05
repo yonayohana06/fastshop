@@ -2,11 +2,10 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { X, ShoppingBag, Package, LogIn, UserPlus, Sun, Moon } from "lucide-react";
+import { X, Package, LogIn, UserPlus, Sun, Moon } from "lucide-react";
 import { NAV_LINKS, FEATURED_CATEGORIES } from "@/lib/constants";
 import { useAuth } from "@/context/auth-context";
 import { useTheme } from "@/context/theme-context";
-
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -46,12 +45,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <Link
               href="/"
               onClick={onClose}
-              className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-white"
+              className="flex items-center text-xl font-black tracking-tight"
             >
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white">
-                <ShoppingBag className="h-4 w-4" />
-              </div>
-              <span>Fast<span className="text-secondary">Shop</span></span>
+              <span className="text-primary">Fast</span>
+              <span className="text-secondary">Shop</span>
             </Link>
             <button
               onClick={onClose}
@@ -127,7 +124,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <button
               type="button"
               onClick={toggleTheme}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
             >
               {theme === "dark" ? (
                 <>
@@ -136,7 +133,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </>
               ) : (
                 <>
-                  <Moon className="h-3.5 w-3.5 text-neutral-600" />
+                  <Moon className="h-3.5 w-3.5 text-zinc-600" />
                   <span>Mode Terang</span>
                 </>
               )}
