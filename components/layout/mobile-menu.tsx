@@ -2,10 +2,10 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { X, ShoppingBag, Package, LogIn, UserPlus } from "lucide-react";
+import { X, Package, LogIn, UserPlus, Sun, Moon } from "lucide-react";
 import { NAV_LINKS, FEATURED_CATEGORIES } from "@/lib/constants";
 import { useAuth } from "@/context/auth-context";
-
+import { useTheme } from "@/context/theme-context";
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +13,8 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -43,12 +45,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <Link
               href="/"
               onClick={onClose}
-              className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-white"
+              className="flex items-center text-xl font-black tracking-tight"
             >
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-white">
-                <ShoppingBag className="h-4 w-4" />
-              </div>
-              <span>Fast<span className="text-secondary">Shop</span></span>
+              <span className="text-primary">Fast</span>
+              <span className="text-secondary">Shop</span>
             </Link>
             <button
               onClick={onClose}
@@ -116,6 +116,29 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
         {/* Footer actions inside mobile menu */}
         <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800 mt-6 space-y-4">
+          {/* Theme Switcher Row */}
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+              Tema Tampilan
+            </span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-3.5 w-3.5 text-amber-500" />
+                  <span>Mode Gelap</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-3.5 w-3.5 text-zinc-600" />
+                  <span>Mode Terang</span>
+                </>
+              )}
+            </button>
+          </div>
 
           {isAuthenticated ? (
             <div className="flex flex-col gap-2">

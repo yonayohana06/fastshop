@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, ShoppingCart, Menu, Sun, Moon } from "lucide-react";
+import { ShoppingCart, Menu, Sun, Moon } from "lucide-react";
 import { NavSearch } from "./nav-search";
 import { NavUserMenu } from "./nav-user-menu";
 import { MobileMenu } from "./mobile-menu";
@@ -43,14 +43,10 @@ export function Navbar() {
 
             <Link
               href="/"
-              className="flex items-center gap-2.5 font-extrabold text-xl tracking-tight text-zinc-950 dark:text-white group"
+              className="flex items-center text-2xl font-black tracking-tight group"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
-                <ShoppingBag className="h-5 w-5" />
-              </div>
-              <span>
-                Fast<span className="text-secondary">Shop</span>
-              </span>
+              <span className="text-primary">Fast</span>
+              <span className="text-secondary">Shop</span>
             </Link>
           </div>
 
@@ -100,7 +96,7 @@ export function Navbar() {
             >
               <ShoppingCart className="h-5 w-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-secondary px-1 text-[11px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1 text-[11px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               )}
@@ -133,7 +129,7 @@ export function Navbar() {
         >
           <ShoppingCart className="h-6 w-6 text-white" />
           {totalItems > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-6 min-w-[24px] items-center justify-center rounded-full bg-secondary px-1.5 text-xs font-black text-white shadow-md ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
+            <span className="absolute -top-1 -right-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-secondary px-1.5 text-xs font-black text-white shadow-md ring-2 ring-white dark:ring-zinc-950 animate-in zoom-in-50 duration-200">
               {totalItems > 99 ? "99+" : totalItems}
             </span>
           )}

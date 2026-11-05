@@ -33,7 +33,7 @@ export function AddToCartToast({
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-6 right-6 z-50 w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 animate-in slide-in-from-bottom-5 duration-200"
+      className="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-full sm:max-w-sm z-50 rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 animate-in slide-in-from-bottom-5 duration-200"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 text-primary font-bold text-xs">
