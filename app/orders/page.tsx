@@ -298,10 +298,10 @@ function OrdersContent() {
 
                   {/* Shipping Address snippet */}
                   {order.shipping_address && (
-                    <p className="mt-3 text-xs text-neutral-500 line-clamp-1 bg-neutral-50 px-3 py-1.5 rounded-lg border border-neutral-200">
-                      <span className="font-semibold text-neutral-700">Tujuan: </span>
-                      {order.shipping_address}
-                    </p>
+                    <div className="mt-3 text-xs text-neutral-600 bg-neutral-50 px-3.5 py-2 rounded-xl border border-neutral-200 leading-relaxed break-words">
+                      <span className="font-bold text-neutral-800">Tujuan: </span>
+                      <span className="whitespace-pre-line">{order.shipping_address}</span>
+                    </div>
                   )}
                 </div>
 

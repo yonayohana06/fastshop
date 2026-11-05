@@ -168,13 +168,15 @@ export default function OrderDetailPage() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
                   <h1 className="text-xl sm:text-2xl font-bold text-neutral-900">
                     Pesanan #{orderId}
                   </h1>
-                  <OrderStatusBadge status={order.status} size="md" />
+                  <div className="self-start sm:self-auto">
+                    <OrderStatusBadge status={order.status} size="md" />
+                  </div>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-neutral-500">
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-neutral-500">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Dipesan: {formatDate(order.created_at)}</span>
@@ -265,7 +267,7 @@ export default function OrderDetailPage() {
                   <span>Alamat Pengiriman</span>
                 </h2>
                 <div className="mt-4 rounded-xl bg-neutral-50 p-4 border border-neutral-200">
-                  <p className="text-sm text-neutral-800 leading-relaxed font-medium">
+                  <p className="text-sm text-neutral-800 leading-relaxed font-medium break-words whitespace-pre-line">
                     {order.shipping_address || "Alamat tidak tercatat."}
                   </p>
                 </div>
