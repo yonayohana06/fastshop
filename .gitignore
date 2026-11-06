@@ -49,3 +49,7 @@ next-env.d.ts
 /.impeccable/sessions/
 /.agents/
 /.impeccable/
+
+
+# image ss
+/docs/screenshot/
