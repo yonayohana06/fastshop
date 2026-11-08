@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { loginApi } from "@/lib/api/auth";
+import { validateAndSanitizeLogin } from "@/lib/validation";
 
 function LoginForm() {
   const router = useRouter();
@@ -37,8 +38,10 @@ function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError("Silakan masukkan email dan kata sandi Anda.");
+
+    const validation = validateAndSanitizeLogin(email, password);
+    if (!validation.isValid) {
+      setError(validation.errors[0].message);
       return;
     }
 
@@ -46,7 +49,10 @@ function LoginForm() {
       setIsLoading(true);
       setError(null);
 
-      const res = await loginApi({ email, password });
+      const res = await loginApi({
+        email: validation.sanitized.email,
+        password: validation.sanitized.password,
+      });
       if (res.data?.token && res.data?.user) {
         login(res.data.token, res.data.user);
         router.push(redirectUrl);

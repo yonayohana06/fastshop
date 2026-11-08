@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { registerApi, loginApi } from "@/lib/api/auth";
+import { validateAndSanitizeRegister } from "@/lib/validation";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -39,18 +40,14 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim() || !email.trim() || !password) {
-      setError("Semua kolom formulir wajib diisi.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Kata sandi minimal harus terdiri dari 6 karakter.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Konfirmasi kata sandi tidak cocok dengan kata sandi.");
+    const validation = validateAndSanitizeRegister(
+      name,
+      email,
+      password,
+      confirmPassword
+    );
+    if (!validation.isValid) {
+      setError(validation.errors[0].message);
       return;
     }
 
@@ -60,17 +57,17 @@ export default function RegisterPage() {
 
       // 1. Call Register Endpoint
       await registerApi({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password,
+        name: validation.sanitized.name,
+        email: validation.sanitized.email,
+        password: validation.sanitized.password,
       });
 
       setSuccessMessage("Pendaftaran berhasil! Mengarahkan ke toko...");
 
       // 2. Auto-login immediately after registration
       const loginRes = await loginApi({
-        email: email.trim().toLowerCase(),
-        password,
+        email: validation.sanitized.email,
+        password: validation.sanitized.password,
       });
 
       if (loginRes.data?.token && loginRes.data?.user) {
