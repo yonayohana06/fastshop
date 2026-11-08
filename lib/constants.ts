@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
   TOKEN: "fastshop_token",
   USER: "fastshop_user",
   CART: "fastshop_cart_local",
+  CART_OWNER: "fastshop_cart_owner",
   THEME: "fastshop_theme",
 } as const;
 

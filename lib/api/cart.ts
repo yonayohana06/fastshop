@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { CartData, ApiResponse } from "@/types";
+import { CartData, CartItemMutationData, ApiResponse } from "@/types";
 
 export interface AddToCartPayload {
   product_id: number | string;
@@ -23,8 +23,8 @@ export async function getCartApi(
 export async function addToCartApi(
   payload: AddToCartPayload,
   token?: string
-): Promise<ApiResponse<unknown>> {
-  return apiClient<unknown>("cart", {
+): Promise<ApiResponse<CartItemMutationData>> {
+  return apiClient<CartItemMutationData>("cart", {
     method: "POST",
     body: JSON.stringify(payload),
     token,
@@ -35,8 +35,8 @@ export async function updateCartItemApi(
   cartItemId: number | string,
   payload: UpdateCartPayload,
   token?: string
-): Promise<ApiResponse<unknown>> {
-  return apiClient<unknown>(`cart/${cartItemId}`, {
+): Promise<ApiResponse<CartItemMutationData>> {
+  return apiClient<CartItemMutationData>(`cart/${cartItemId}`, {
     method: "PUT",
     body: JSON.stringify(payload),
     token,

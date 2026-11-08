@@ -56,6 +56,14 @@ export interface CartData {
   grand_total: number | string;
 }
 
+export interface CartItemMutationData {
+  id?: number | string;
+  cart_item_id?: number | string;
+  product_id?: number | string;
+  user_id?: number | string;
+  quantity?: number;
+}
+
 export type OrderStatus =
   | "PENDING"
   | "PROCESSING"

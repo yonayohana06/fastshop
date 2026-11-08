@@ -3,7 +3,7 @@
 > **Sumber analisis:** [`docs/analisis/2026-11-08-analisis-project-fastshop.md`](../analisis/2026-11-08-analisis-project-fastshop.md)
 > **Tanggal dibuat:** 8 November 2026
 > **Commit acuan:** `ed5df16`
-> **Status:** Backlog awal — semua item belum dikerjakan.
+> **Status:** Sedang dikerjakan — P0-01 selesai, task lain belum dimulai.
 
 Dokumen ini menerjemahkan temuan dan risiko dari analisis project menjadi daftar pekerjaan yang bisa dieksekusi dan diverifikasi.
 
@@ -36,7 +36,7 @@ Dokumen ini menerjemahkan temuan dan risiko dari analisis project menjadi daftar
 
 ### P0 — Blocker
 
-- [ ] **P0-01** Sinkronisasi cart dengan server
+- [x] **P0-01** Sinkronisasi cart dengan server
 - [ ] **P0-02** Perbaiki hydration auth dan route guard
 - [ ] **P0-03** Tegaskan kontrak metode pembayaran dan rekening
 - [ ] **P0-04** Hapus data rating/review/“terjual” palsu
@@ -103,36 +103,59 @@ Dokumen ini menerjemahkan temuan dan risiko dari analisis project menjadi daftar
 | **Prioritas** | P0 |
 | **Estimasi** | L (1–2 hari) |
 | **Dependensi** | P1-07 untuk automated test; perbaikan bisa dimulai tanpa test runner |
+| **Status** | ✅ Selesai — 8 November 2026 |
 
 **File terkait:**
 - `context/cart-context.tsx`
+- `components/cart/cart-sync-toast.tsx` *(baru)*
+- `context/app-provider.tsx`
 - `components/products/product-card.tsx`
 - `components/products/product-purchase-box.tsx`
 - `lib/api/cart.ts`
+- `lib/constants.ts`
 - `types/index.ts`
+- `tests/cart-context.test.tsx` *(baru)*
+- `tests/setup.ts` *(baru)*
+- `vitest.config.mts` *(baru)*
 
 **Masalah:**
 `updateQuantity` tidak memanggil API, item yang ditambahkan menyimpan `cart_item_id` sementara, response `POST /cart` diabaikan, refresh hanya terjadi saat mount, dan cart tidak dibersihkan/di-merge saat login/logout. Error sinkronisasi juga ditelan.
 
 **Langkah:**
-- [ ] Tentukan model sinkronisasi: server sebagai sumber kebenaran saat login, localStorage hanya untuk guest.
-- [ ] Saat `addItem` dan user login, tunggu response `POST /cart`, lalu simpan `cart_item_id` asli dari response (atau panggil `refreshCart` setelahnya).
-- [ ] Saat `updateQuantity`, panggil `PUT /cart/:cart_item_id`; jika quantity `<= 0`, panggil `DELETE /cart/:cart_item_id`.
-- [ ] Saat `removeItem`, pastikan yang dikirim adalah `cart_item_id` asli, bukan `temp_*`.
-- [ ] Tambahkan sinkronisasi cart saat token auth berubah (login) dan bersihkan cart saat logout.
-- [ ] Implementasikan merge cart guest → server saat login (atau konfirmasi produk mana yang dipertahankan).
-- [ ] Ganti `.catch(() => {})` dengan penanganan error yang terlihat oleh pengguna (toast/banner) atau antrean retry.
-- [ ] Pastikan `refreshCart` tidak menimpa perubahan lokal yang belum tersinkron.
+- [x] Tentukan model sinkronisasi: server sebagai sumber kebenaran saat login, localStorage hanya untuk guest.
+- [x] Saat `addItem` dan user login, tunggu response `POST /cart`, lalu simpan `cart_item_id` asli dari response (atau panggil `refreshCart` setelahnya).
+- [x] Saat `updateQuantity`, panggil `PUT /cart/:cart_item_id`; jika quantity `<= 0`, panggil `DELETE /cart/:cart_item_id`.
+- [x] Saat `removeItem`, pastikan yang dikirim adalah `cart_item_id` asli, bukan `temp_*`.
+- [x] Tambahkan sinkronisasi cart saat token auth berubah (login) dan bersihkan cart saat logout.
+- [x] Implementasikan merge cart guest → server saat login (atau konfirmasi produk mana yang dipertahankan).
+- [x] Ganti `.catch(() => {})` dengan penanganan error yang terlihat oleh pengguna (toast/banner) atau antrean retry.
+- [x] Pastikan `refreshCart` tidak menimpa perubahan lokal yang belum tersinkron.
 
 **Test wajib:**
-- [ ] Guest menambah produk → cart lokal bertambah.
-- [ ] Login dengan cart guest → cart server dan guest digabung sesuai aturan.
-- [ ] User login menambah produk → item lokal memiliki `cart_item_id` asli.
-- [ ] Update quantity → `PUT /cart/:id` dipanggil dan hasil reload tetap.
-- [ ] Quantity menjadi 0 → `DELETE /cart/:id` dipanggil.
-- [ ] Hapus item setelah tambah dalam sesi yang sama → server item benar-benar hilang.
-- [ ] Logout → cart lokal kosong.
-- [ ] API gagal saat add/update/remove → pengguna melihat pesan error.
+- [x] Guest menambah produk → cart lokal bertambah.
+- [x] Login dengan cart guest → cart server dan guest digabung sesuai aturan.
+- [x] User login menambah produk → item lokal memiliki `cart_item_id` asli.
+- [x] Update quantity → `PUT /cart/:id` dipanggil dan hasil reload tetap.
+- [x] Quantity menjadi 0 → `DELETE /cart/:id` dipanggil.
+- [x] Hapus item setelah tambah dalam sesi yang sama → server item benar-benar hilang.
+- [x] Logout → cart lokal kosong.
+- [x] API gagal saat add/update/remove → pengguna melihat pesan error.
+
+**Catatan implementasi:**
+- Semua mutasi server dijalankan lewat antrean (`queueRef`) agar `POST`/`PUT`/`DELETE` berurutan dan tidak saling menimpa.
+- `cart_item_id` asli disimpan dari response `POST /cart` dan dipetakan per `product_id`, sehingga `removeItem` yang dipanggil saat `POST` masih berjalan tetap mengirim ID server yang benar.
+- Penanda pemilik cart (`STORAGE_KEYS.CART_OWNER`: `guest` atau `user:<id>`) mencegah cart bocor antar akun.
+- Saat login, item guest dengan ID sementara di-merge ke server; item yang sudah punya ID server dilewati agar retry tidak menggandakan quantity.
+- `refreshCart` memakai revision counter: respons `GET /cart` yang datang setelah perubahan lokal tidak menimpa perubahan tersebut.
+- Error sinkronisasi ditampilkan lewat `CartSyncToast` global (`role="alert"`) dan dapat ditutup pengguna.
+- Test runner Vitest + React Testing Library ditambahkan sebagai fondasi awal P1-07; error boundary dan CI tetap menjadi bagian P1-07.
+
+**Hasil verifikasi:**
+- `npm test` → **12 test lulus**.
+- `npm run lint` → bersih.
+- `npx tsc --noEmit` → lolos.
+- `npm run build` → berhasil (14 route).
+- `grep -rn "gradient" app components lib` → 0 match.
 
 **Kriteria selesai:**
 - Tidak ada `cart_item_id` berawalan `temp_` yang dikirim ke endpoint server.
@@ -142,6 +165,7 @@ Dokumen ini menerjemahkan temuan dan risiko dari analisis project menjadi daftar
 
 **Verifikasi:**
 ```bash
+npm test
 npm run lint
 npx tsc --noEmit
 npm run build
