@@ -11,43 +11,38 @@ import {
   ShieldCheck,
   Calendar,
   Mail,
-  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
+import { useAuthGuard } from "@/lib/hooks/use-auth-guard";
 import { getMeApi } from "@/lib/api/auth";
 import { User } from "@/types";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { AuthLoading } from "@/components/auth/auth-loading";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user: authUser, token, isAuthenticated, logout } = useAuth();
+  const { user: authUser, token, logout } = useAuth();
+  const { isReady } = useAuthGuard("/profile");
   const [profile, setProfile] = useState<User | null>(authUser);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login?redirect=/profile");
+    if (!isReady || !token) {
       return;
     }
 
-    if (token) {
-      getMeApi(token)
-        .then((res) => {
-          if (res.data) {
-            setProfile(res.data);
-          }
-        })
-        .catch((err) => {
-          console.warn("Gagal memperbarui profil:", err);
-        });
-    }
-  }, [isAuthenticated, token, router]);
+    getMeApi(token)
+      .then((res) => {
+        if (res.data) {
+          setProfile(res.data);
+        }
+      })
+      .catch((err) => {
+        console.warn("Gagal memperbarui profil:", err);
+      });
+  }, [isReady, token]);
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  if (!isReady) {
+    return <AuthLoading />;
   }
 
   const currentUser = profile || authUser;

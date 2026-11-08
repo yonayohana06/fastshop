@@ -13,6 +13,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isHydrated: boolean;
   isLoading: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
@@ -39,11 +40,23 @@ function getServerAuthSnapshot() {
   return ":::";
 }
 
+const subscribeHydration = () => () => {};
+const getHydratedClientSnapshot = () => true;
+const getHydratedServerSnapshot = () => false;
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const authString = useSyncExternalStore(
     subscribeAuth,
     getAuthSnapshot,
     getServerAuthSnapshot
+  );
+
+  // False during SSR and the hydration render, then true once the client
+  // snapshot from localStorage is active. Guards must wait for this flag.
+  const isHydrated = useSyncExternalStore(
+    subscribeHydration,
+    getHydratedClientSnapshot,
+    getHydratedServerSnapshot
   );
 
   const [tokenStr, userStr] = authString.split(":::");
@@ -83,7 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         token,
         isAuthenticated: !!token && !!user,
-        isLoading: false,
+        isHydrated,
+        isLoading: !isHydrated,
         login,
         logout,
       }}

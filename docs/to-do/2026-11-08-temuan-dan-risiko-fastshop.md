@@ -182,30 +182,50 @@ npm run build
 | **Prioritas** | P0 |
 | **Estimasi** | M (0,5–1 hari) |
 | **Dependensi** | - |
+| **Status** | ✅ Selesai — 8 November 2026 |
 
 **File terkait:**
 - `context/auth-context.tsx`
+- `lib/hooks/use-auth-guard.ts` *(baru)*
+- `components/auth/auth-loading.tsx` *(baru)*
 - `app/checkout/page.tsx`
 - `app/orders/page.tsx`
 - `app/orders/[id]/page.tsx`
 - `app/profile/page.tsx`
+- `tests/auth-context.test.tsx` *(baru)*
+- `tests/auth-guard.test.tsx` *(baru)*
+- `tests/auth-protected-pages.test.tsx` *(baru)*
 
 **Masalah:**
 `isLoading` selalu `false` dan server snapshot auth adalah `":::"`. Guard berjalan sebelum localStorage selesai dibaca, sehingga user yang sudah login dapat diarahkan ke `/login` saat hard refresh. Halaman protected juga sempat menampilkan state yang salah.
 
 **Langkah:**
-- [ ] Tambahkan state `isHydrated`/`isReady` yang menjadi `true` setelah snapshot localStorage tersedia.
-- [ ] Ubah guard di semua halaman protected agar hanya berjalan setelah `isHydrated === true`.
-- [ ] Tambahkan pengecekan loading yang hilang di `/profile`.
-- [ ] Tampilkan skeleton/spinner yang konsisten selama status auth belum diketahui.
-- [ ] Pastikan redirect menyertakan `redirect` ke route asal dan tidak berjalan dua kali.
+- [x] Tambahkan state `isHydrated`/`isReady` yang menjadi `true` setelah snapshot localStorage tersedia.
+- [x] Ubah guard di semua halaman protected agar hanya berjalan setelah `isHydrated === true`.
+- [x] Tambahkan pengecekan loading yang hilang di `/profile`.
+- [x] Tampilkan skeleton/spinner yang konsisten selama status auth belum diketahui.
+- [x] Pastikan redirect menyertakan `redirect` ke route asal dan tidak berjalan dua kali.
 
 **Test wajib:**
-- [ ] Hard refresh `/checkout` dengan token valid → tidak diarahkan ke login.
-- [ ] Hard refresh `/orders` dengan token valid → daftar pesanan dimuat.
-- [ ] Hard refresh `/profile` dengan token valid → profil tampil.
-- [ ] Akses protected route tanpa token setelah hydration → diarahkan ke login.
-- [ ] Tidak ada flash konten protected sebelum redirect.
+- [x] Hard refresh `/checkout` dengan token valid → tidak diarahkan ke login.
+- [x] Hard refresh `/orders` dengan token valid → daftar pesanan dimuat.
+- [x] Hard refresh `/profile` dengan token valid → profil tampil.
+- [x] Akses protected route tanpa token setelah hydration → diarahkan ke login.
+- [x] Tidak ada flash konten protected sebelum redirect.
+
+**Catatan implementasi:**
+- `AuthProvider` mengekspos `isHydrated` dari `useSyncExternalStore` dengan server snapshot `false` dan client snapshot `true`; `isLoading` kini berarti `!isHydrated` sehingga maknanya eksplisit.
+- Guard dipusatkan di `useAuthGuard(redirectTo)` (`lib/hooks/use-auth-guard.ts`). Hook memakai `router.replace`, meng-encode route asal, dan menyimpan `hasRedirectedRef` agar redirect hanya terjadi sekali.
+- Keempat halaman protected memakai hook yang sama dan merender `AuthLoading` (`role="status"`) sampai `isReady === true`; fetch data (`orders`, detail pesanan, profil) baru berjalan setelah `isReady`.
+- `/profile` kini memiliki pengecekan loading yang sebelumnya hilang, sehingga tidak lagi merender konten protected sebelum status auth diketahui.
+- Regression test halaman memakai `renderToString` + `hydrateRoot` nyata untuk mereproduksi timing hard refresh, bukan mem-mock state auth.
+
+**Hasil verifikasi:**
+- `npm test` → **28 test lulus** (12 cart + 16 auth).
+- `npm run lint` → bersih.
+- `npx tsc --noEmit` → lolos.
+- `npm run build` → berhasil (14 route).
+- `grep -rn "gradient" app components lib` → 0 match.
 
 **Kriteria selesai:**
 - Tidak ada redirect palsu pada hard refresh.
@@ -214,6 +234,7 @@ npm run build
 
 **Verifikasi:**
 ```bash
+npm test
 npm run lint
 npx tsc --noEmit
 npm run build

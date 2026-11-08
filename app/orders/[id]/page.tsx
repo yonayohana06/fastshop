@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   Package,
   Calendar,
@@ -16,15 +16,16 @@ import {
   Check,
   ShieldCheck,
   AlertCircle,
-  Loader2,
   Clock,
   CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { getOrderByIdApi } from "@/lib/api/orders";
+import { useAuthGuard } from "@/lib/hooks/use-auth-guard";
 import { Order } from "@/types";
 import { formatRupiah } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { AuthLoading } from "@/components/auth/auth-loading";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
 import { PaymentUploadModal } from "@/components/orders/payment-upload-modal";
 
@@ -51,11 +52,11 @@ const BANK_ACCOUNTS = [
 ];
 
 export default function OrderDetailPage() {
-  const router = useRouter();
   const params = useParams();
   const orderId = (params?.id as string) || "";
 
-  const { token, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { token } = useAuth();
+  const { isReady } = useAuthGuard(`/orders/${orderId}`);
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -83,18 +84,11 @@ export default function OrderDetailPage() {
       });
   }, [token, orderId]);
 
-  // Auth guard
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push(`/login?redirect=/orders/${orderId}`);
-    }
-  }, [authLoading, isAuthenticated, router, orderId]);
-
-  useEffect(() => {
-    if (isAuthenticated && token && orderId) {
+    if (isReady && token && orderId) {
       fetchOrderDetail();
     }
-  }, [isAuthenticated, token, orderId, fetchOrderDetail]);
+  }, [isReady, token, orderId, fetchOrderDetail]);
 
   const handleCopyAccount = (bank: string, number: string) => {
     navigator.clipboard.writeText(number);
@@ -104,12 +98,8 @@ export default function OrderDetailPage() {
     }, 2000);
   };
 
-  if (authLoading || (!isAuthenticated && authLoading)) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  if (!isReady) {
+    return <AuthLoading />;
   }
 
   return (
@@ -267,7 +257,7 @@ export default function OrderDetailPage() {
                   <span>Alamat Pengiriman</span>
                 </h2>
                 <div className="mt-4 rounded-xl bg-neutral-50 p-4 border border-neutral-200">
-                  <p className="text-sm text-neutral-800 leading-relaxed font-medium break-words whitespace-pre-line">
+                  <p className="text-sm text-neutral-800 leading-relaxed font-medium wrap-break-word whitespace-pre-line">
                     {order.shipping_address || "Alamat tidak tercatat."}
                   </p>
                 </div>

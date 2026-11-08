@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,12 +19,15 @@ import {
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import { checkoutOrderApi } from "@/lib/api/orders";
+import { useAuthGuard } from "@/lib/hooks/use-auth-guard";
 import { formatRupiah } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { AuthLoading } from "@/components/auth/auth-loading";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
+  const { isReady } = useAuthGuard("/checkout");
   const { items, grandTotal, clearCart } = useCart();
 
   const [recipientName, setRecipientName] = useState(user?.name || "");
@@ -39,19 +42,8 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Auth guard
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push("/login?redirect=/checkout");
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  if (authLoading || (!isAuthenticated && authLoading)) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  if (!isReady) {
+    return <AuthLoading />;
   }
 
   // Guard for empty cart

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Package,
   ArrowRight,
@@ -16,9 +16,11 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { getOrdersApi } from "@/lib/api/orders";
+import { useAuthGuard } from "@/lib/hooks/use-auth-guard";
 import { Order } from "@/types";
 import { formatRupiah } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { AuthLoading } from "@/components/auth/auth-loading";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
 import { PaymentUploadModal } from "@/components/orders/payment-upload-modal";
 
@@ -48,9 +50,9 @@ function formatDate(dateStr: string): string {
 }
 
 function OrdersContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const { token, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { token } = useAuth();
+  const { isReady } = useAuthGuard("/orders");
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,37 +80,27 @@ function OrdersContent() {
       });
   }, [token]);
 
-  // Auth guard
+  // Load orders once auth hydration is ready
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push("/login?redirect=/orders");
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  useEffect(() => {
-    if (isAuthenticated && token) {
+    if (isReady && token) {
       fetchOrders();
     }
-  }, [isAuthenticated, token, fetchOrders]);
+  }, [isReady, token, fetchOrders]);
 
   // Declarative target for payment upload (manual click or initial auto open)
   const autoUploadTarget =
     !hasDismissedAutoUpload && newOrderId
       ? orders.find(
-          (o) =>
-            String(o.order_id || o.id) === String(newOrderId) &&
-            (o.status || "").toUpperCase() === "PENDING"
-        ) || null
+        (o) =>
+          String(o.order_id || o.id) === String(newOrderId) &&
+          (o.status || "").toUpperCase() === "PENDING"
+      ) || null
       : null;
 
   const selectedOrderForUpload = manualUploadOrder || autoUploadTarget;
 
-  if (authLoading || (!isAuthenticated && authLoading)) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  if (!isReady) {
+    return <AuthLoading />;
   }
 
   // Filter orders by active tab
@@ -173,19 +165,17 @@ function OrdersContent() {
             <button
               key={tab.value}
               onClick={() => setActiveTab(tab.value)}
-              className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-colors flex items-center gap-2 ${
-                isActive
+              className={`shrink-0 rounded-xl px-4 py-2 text-xs font-semibold transition-colors flex items-center gap-2 ${isActive
                   ? "bg-primary text-white shadow-sm"
                   : "bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-50"
-              }`}
+                }`}
             >
               <span>{tab.label}</span>
               <span
-                className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                  isActive
+                className={`rounded-full px-1.5 py-0.2 text-[10px] ${isActive
                     ? "bg-white/20 text-white"
                     : "bg-neutral-100 text-neutral-700"
-                }`}
+                  }`}
               >
                 {count}
               </span>
@@ -298,7 +288,7 @@ function OrdersContent() {
 
                   {/* Shipping Address snippet */}
                   {order.shipping_address && (
-                    <div className="mt-3 text-xs text-neutral-600 bg-neutral-50 px-3.5 py-2 rounded-xl border border-neutral-200 leading-relaxed break-words">
+                    <div className="mt-3 text-xs text-neutral-600 bg-neutral-50 px-3.5 py-2 rounded-xl border border-neutral-200 leading-relaxed wrap-break-word">
                       <span className="font-bold text-neutral-800">Tujuan: </span>
                       <span className="whitespace-pre-line">{order.shipping_address}</span>
                     </div>
